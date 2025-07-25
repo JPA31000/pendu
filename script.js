@@ -17,7 +17,7 @@ const wordsList = [
 ];
 
 const totalRounds = 3;
-const maxParts    = 6;
+const maxParts    = 9; // allow up to 9 wrong attempts
 const parts       = ["post","beam","rope","head","body","left-arm","right-arm","left-leg","right-leg"];
 
 let sequence = [], found = 0, current = 0, wrong = 0;
