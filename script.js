@@ -234,6 +234,9 @@ function endGame() {
 
 // Événements
 btn.addEventListener('click', guess);
+input.addEventListener('keyup', (e) => {
+  if (e.key === 'Enter') guess();
+});
 hintBtn.addEventListener('click', () => {
   msg.textContent = `Indice : ${sequence[current].hint}`;
 });
