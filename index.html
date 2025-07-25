@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Jeu du Pendu – 3 mots en 3 minutes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Jeu du Pendu</h1>
+  <div id="status">
+    <div id="round">Trouvés : 0 / 3</div>
+    <div id="timer">Temps restant : <span id="time-left">03:00</span></div>
+  </div>
+  <div id="game-container">
+    <svg id="hangman-svg" width="200" height="250">
+      <line x1="20" y1="240" x2="180" y2="240" stroke="#212529" stroke-width="4"/>
+      <line id="post"     x1="40"  y1="240" x2="40"  y2="20"  stroke="#212529" stroke-width="4" style="display:none"/>
+      <line id="beam"     x1="40"  y1="20"  x2="120" y2="20"  stroke="#212529" stroke-width="4" style="display:none"/>
+      <line id="rope"     x1="120" y1="20"  x2="120" y2="50"  stroke="#212529" stroke-width="4" style="display:none"/>
+      <circle id="head"   cx="120" cy="70"  r="15"           stroke="#212529" stroke-width="4" fill="transparent" style="display:none"/>
+      <line   id="body"   x1="120" y1="85"  x2="120" y2="140" stroke="#212529" stroke-width="4" style="display:none"/>
+      <line   id="left-arm"  x1="120" y1="100" x2="90"  y2="120" stroke="#212529" stroke-width="4" style="display:none"/>
+      <line   id="right-arm" x1="120" y1="100" x2="150" y2="120" stroke="#212529" stroke-width="4" style="display:none"/>
+      <line   id="left-leg"  x1="120" y1="140" x2="100" y2="180" stroke="#212529" stroke-width="4" style="display:none"/>
+      <line   id="right-leg" x1="120" y1="140" x2="140" y2="180" stroke="#212529" stroke-width="4" style="display:none"/>
+      <text   id="smile"    x="112" y="75"  font-size="12" style="display:none">:)</text>
+    </svg>
+
+    <div id="word-display"></div>
+
+    <div id="input-area">
+      <input id="letter-input" type="text" maxlength="1" autofocus>
+      <button id="submit-letter">Valider</button>
+      <button id="hint-btn">Indice</button>
+    </div>
+
+    <div id="message"></div>
+    <button id="restart" style="display:none">Rejouer</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
