@@ -16,12 +16,12 @@ const wordsList = [
   { word: "DALLE",          hint: "Surface horizontale, constituée de béton armé et de barres d’acier" }
 ];
 
-const totalRounds = 3;
+const gameDuration = 180; // durée totale en secondes
 const maxParts    = 9; // allow up to 9 wrong attempts
 const parts       = ["post","beam","rope","head","body","left-arm","right-arm","left-leg","right-leg"];
 
-let sequence = [], found = 0, current = 0, wrong = 0;
-let timeLeft = 180, timer;  
+let found = 0, wrong = 0;
+let currentWord, timer, timeElapsed = 0;
 
 // DOM
 const roundEl = document.getElementById('round');
@@ -34,42 +34,36 @@ const hintBtn = document.getElementById('hint-btn');
 const restart = document.getElementById('restart');
 
 function init() {
-  // Sélection de 3 mots uniques
-  const copy = [...wordsList];
-  sequence = [];
-  for (let i = 0; i < totalRounds; i++) {
-    const idx = Math.floor(Math.random() * copy.length);
-    sequence.push(copy.splice(idx, 1)[0]);
-  }
-  found = 0; current = 0;
+  found = 0;
+  timeElapsed = 0;
   startTimer();
   nextWord();
 }
 
 function startTimer() {
   clearInterval(timer);
-  timeLeft = 180;
+  timeElapsed = 0;
   updateTimer();
   timer = setInterval(() => {
-    timeLeft--;
+    timeElapsed++;
     updateTimer();
-    if (timeLeft <= 0) endGame();
+    if (timeElapsed >= gameDuration) endGame();
   }, 1000);
 }
 
 function updateTimer() {
-  const m = String(Math.floor(timeLeft / 60)).padStart(2,'0');
-  const s = String(timeLeft % 60).padStart(2,'0');
+  const m = String(Math.floor(timeElapsed / 60)).padStart(2,'0');
+  const s = String(timeElapsed % 60).padStart(2,'0');
   timerEl.textContent = `${m}:${s}`;
 }
 
 function nextWord() {
   wrong = 0;
   parts.forEach(id => document.getElementById(id).style.display = 'none');
-  const { word } = sequence[current];
-  display.textContent = '_ '.repeat(word.length).trim();
+  currentWord = wordsList[Math.floor(Math.random() * wordsList.length)];
+  display.textContent = '_ '.repeat(currentWord.word.length).trim();
   msg.textContent = '';
-  roundEl.textContent = `Trouvés : ${found} / 3`;
+  roundEl.textContent = `Trouvés : ${found}`;
   input.disabled = false; btn.disabled = false;
   restart.style.display = 'none';
 }
@@ -79,8 +73,7 @@ function finishRound(isWin) {
     found++;
     document.getElementById('smile').style.display = 'inline';
   }
-  current++;
-  if (current < totalRounds && timeLeft > 0) {
+  if (timeElapsed < gameDuration) {
     setTimeout(nextWord, 600);
   } else {
     endGame();
@@ -92,7 +85,7 @@ function guess() {
   input.value = '';
   if (!/^[A-Z]$/.test(l)) return;
 
-  const { word } = sequence[current];
+  const { word } = currentWord;
   let arr = display.textContent.split(' ');
   let correct = false;
 
@@ -113,7 +106,7 @@ function guess() {
       wrong++;
     }
     if (wrong >= maxParts) {
-      msg.textContent = `Pendu ! Le mot était : ${sequence[current].word}`;
+      msg.textContent = `Pendu ! Le mot était : ${currentWord.word}`;
       finishRound(false);
     }
   }
@@ -121,10 +114,8 @@ function guess() {
 
 function endGame() {
   clearInterval(timer);
-  const success = (found === totalRounds && timeLeft > 0);
-  msg.textContent = success
-    ? '👏 Bravo ! Vous avez trouvé les 3 mots.'
-    : `⏱️ Temps écoulé ! Mots trouvés : ${found}.`;
+  const eq = found * 30;
+  msg.textContent = `⏱️ Temps écoulé ! Mots trouvés : ${found}. Temps équivalent : ${eq}s.`;
   input.disabled = true; btn.disabled = true;
   restart.style.display = 'inline';
 }
@@ -135,7 +126,7 @@ input.addEventListener('keyup', (e) => {
   if (e.key === 'Enter') guess();
 });
 hintBtn.addEventListener('click', () => {
-  msg.textContent = `Indice : ${sequence[current].hint}`;
+  msg.textContent = `Indice : ${currentWord.hint}`;
 });
 restart.addEventListener('click', init);
 
