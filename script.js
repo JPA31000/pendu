@@ -52,8 +52,9 @@ function startTimer() {
 }
 
 function updateTimer() {
-  const m = String(Math.floor(timeElapsed / 60)).padStart(2,'0');
-  const s = String(timeElapsed % 60).padStart(2,'0');
+  const remaining = gameDuration - timeElapsed;
+  const m = String(Math.floor(remaining / 60)).padStart(2, '0');
+  const s = String(remaining % 60).padStart(2, '0');
   timerEl.textContent = `${m}:${s}`;
 }
 
@@ -65,6 +66,8 @@ function nextWord() {
   msg.textContent = '';
   roundEl.textContent = `Trouvés : ${found}`;
   input.disabled = false; btn.disabled = false;
+  hintBtn.disabled = true;
+  hintBtn.classList.remove('active');
   restart.style.display = 'none';
 }
 
@@ -104,6 +107,10 @@ function guess() {
     if (wrong < maxParts) {
       document.getElementById(parts[wrong]).style.display = 'inline';
       wrong++;
+      if (wrong === 3) {
+        hintBtn.disabled = false;
+        hintBtn.classList.add('active');
+      }
     }
     if (wrong >= maxParts) {
       msg.textContent = `Pendu ! Le mot était : ${currentWord.word}`;

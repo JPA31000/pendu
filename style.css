@@ -57,3 +57,11 @@ button {
 #hint-btn:hover {
   background-color: #e0a800;
 }
+#hint-btn:disabled {
+  background-color: #ccc;
+  cursor: default;
+}
+#hint-btn.active {
+  background-color: #28a745;
+  color: #fff;
+}
